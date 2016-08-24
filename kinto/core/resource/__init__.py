@@ -135,7 +135,7 @@ class UserResource(object):
     interacting the :mod:`kinto.core.storage` and :mod:`kinto.core.permission`
     backends."""
 
-    mapping = ResourceSchema()
+    mapping = ResourceSchema
     """Schema to validate records."""
 
     def __init__(self, request, context=None):
@@ -204,7 +204,7 @@ class UserResource(object):
 
     def _get_known_fields(self):
         """Return all the `field` defined in the ressource mapping."""
-        known_fields = [c.name for c in self.mapping.children] + \
+        known_fields = [c.name for c in self.mapping().children] + \
                        [self.model.id_field,
                         self.model.modified_field,
                         self.model.deleted_field]
@@ -636,7 +636,7 @@ class UserResource(object):
         updated.update(**changes)
 
         try:
-            return self.mapping.deserialize(updated)
+            return self.mapping().deserialize(updated)
         except colander.Invalid as e:
             # Transform the errors we got from colander into Cornice errors.
             # We could not rely on Service schema because the record should be
