@@ -121,7 +121,7 @@ class ViewSetTest(unittest.TestCase):
         )
 
         arguments = viewset.collection_arguments(mock.MagicMock, 'get')
-        arguments.pop('schema')
+
         self.assertDictEqual(
             arguments,
             {
@@ -157,7 +157,7 @@ class ViewSetTest(unittest.TestCase):
         )
 
         arguments = viewset.record_arguments(mock.MagicMock, 'get')
-        arguments.pop('schema')
+
 
         self.assertDictEqual(
             arguments,
@@ -194,7 +194,7 @@ class ViewSetTest(unittest.TestCase):
         )
 
         arguments = viewset.record_arguments(mock.MagicMock, 'get')
-        arguments.pop('schema')
+
 
         self.assertDictEqual(
             arguments,
@@ -222,7 +222,7 @@ class ViewSetTest(unittest.TestCase):
         )
 
         arguments = viewset.record_arguments(mock.MagicMock, 'get')
-        arguments.pop('schema')
+
         self.assertDictEqual(
             arguments,
             {
