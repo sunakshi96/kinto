@@ -50,6 +50,10 @@ class AuthorizationPolicy(object):
     permission depend on others."""
 
     def permits(self, context, principals, permission):
+        if context.allowed_principals:
+            if bool(set(context.allowed_principals) & set(principals)):
+                return True
+
         if permission == PRIVATE:
             return Authenticated in principals
 
@@ -72,15 +76,12 @@ class AuthorizationPolicy(object):
         if permission == 'create':
             permission = '%s:%s' % (context.resource_name, permission)
 
-        if context.allowed_principals:
-            allowed = bool(set(context.allowed_principals) & set(principals))
+        object_id = context.permission_object_id
+        if self.get_bound_permissions is None:
+            bound_perms = [(object_id, permission)]
         else:
-            object_id = context.permission_object_id
-            if self.get_bound_permissions is None:
-                bound_perms = [(object_id, permission)]
-            else:
-                bound_perms = self.get_bound_permissions(object_id, permission)
-            allowed = context.check_permission(principals, bound_perms)
+            bound_perms = self.get_bound_permissions(object_id, permission)
+        allowed = context.check_permission(principals, bound_perms)
 
         # If not allowed on this collection, but some records are shared with
         # the current user, then authorize.
